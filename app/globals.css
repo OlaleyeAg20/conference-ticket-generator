@@ -11,6 +11,9 @@
 
   /* paddings */
   --padding-1: 48px;
+
+  /* font sizes */
+  --font-size-hero: 62px
 }
 
 
@@ -82,6 +85,9 @@ header button{
 
     /* paddings */
   --padding-1: 24px;
+
+  /* font sizes */
+  --font-size-hero: 48px
   }
 
   .nav{
