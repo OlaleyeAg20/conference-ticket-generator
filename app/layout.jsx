@@ -16,7 +16,8 @@ const roadRage = Road_Rage({
 
 export const metadata = {
   title: "Ticket Generator",
-  description: "Generated your ticket for your next events",
+  description: "Generate your ticket for your next events",
+  image: "/vercel.svg",
 };
 
 export default function RootLayout({ children }) {
