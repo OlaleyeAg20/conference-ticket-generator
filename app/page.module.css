@@ -173,13 +173,6 @@
 }
 
 @media (max-width: 768px){
-  :root{
-      /* border radiuses */
-    --border-radius-1: 12px;
-
-    /* paddings */
-  --padding-1: 24px;
-  }
 
   .nav{
     display: none;
