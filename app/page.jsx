@@ -13,9 +13,9 @@ const Ticketselection = ({ticketType, setTicketType, handleQuantityChange, ticke
     <>
           <div className={styles.eventCard}>
             <h2>Techember Fest ”25</h2>
-            <p>Join us for an unforgettable experience at [Event Name]! Secure your spot now.</p>
+            <p>Join us for an unforgettable experience at Techember Fest ”25! Secure your spot now.</p>
             <div>
-              <span>📍 [Event Location] || March 15, 2025 | 7:00 PM</span>
+              <span>📍 ASO || March 15, 2025 | 7:00 PM</span>
             </div>
           </div>
 
@@ -25,25 +25,25 @@ const Ticketselection = ({ticketType, setTicketType, handleQuantityChange, ticke
             <h4>Select Ticket Type:</h4>
             <div>
               <button onClick={() => setTicketType("regular")} style={ticketType === "regular" ? {background: '#197686'} : null} className={styles.ticketType}>
+                <span className={styles.priceTag}>Free</span>
                 <div>
                   <span>REGULAR ACCESS</span>
                   <span>20 left!</span>
                 </div>
-                <span className={styles.priceTag}>Free</span>
               </button>
               <button onClick={() => setTicketType("vip")} style={ticketType === "vip" ? {background: '#197686'} : null} className={styles.ticketType}>
+                <span className={styles.priceTag}>$50</span>
                 <div>
                   <span>VIP ACCESS</span>
                   <span>20 left!</span>
                 </div>
-                <span className={styles.priceTag}>$50</span>
               </button>
               <button onClick={() => setTicketType("vvip")} style={ticketType === "vvip" ? {background: '#197686'} : null} className={styles.ticketType}>
+                <span className={styles.priceTag}>$150</span>
                 <div>
                   <span>VVIP ACCESS</span>
                   <span>20 left!</span>
                 </div>
-                <span className={styles.priceTag}>$150</span>
               </button>
             </div>
           </section>
@@ -59,6 +59,15 @@ const Ticketselection = ({ticketType, setTicketType, handleQuantityChange, ticke
             </select>
           </section>
         </>
+  )
+}
+
+const Ticketready = () => {
+  return (
+     <>
+      <h1 className={styles.ticketReadyHeader}>Your Ticket is Booked</h1>
+      <p className={styles.ticketReadyParagraph}>Check your email for a copy or you can download</p>
+     </>
   )
 }
 
@@ -129,9 +138,9 @@ export default function Home() {
     <Context.Provider value={{ ticketType, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps }}>
     <section className={styles.container}>
       <Navprogress />
-      <section className={styles.innerContainer}>
+      <section style={ticketHeader === "Ready" ? {border: 'none', background: 'none'} : null} className={styles.innerContainer}>
           {
-            steps === 1 ? <Ticketselection ticketType={ticketType} setTicketType={setTicketType} handleQuantityChange={handleQuantityChange} ticketQuantity={ticketQuantity} /> : steps === 2 ? <Attendeedetails /> : <div>Ready</div>
+            steps === 1 ? <Ticketselection ticketType={ticketType} setTicketType={setTicketType} handleQuantityChange={handleQuantityChange} ticketQuantity={ticketQuantity} /> : steps === 2 ? <Attendeedetails /> : <Ticketready />
           }
 
               {/* Buttons */}
