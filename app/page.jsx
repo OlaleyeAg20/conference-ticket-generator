@@ -1,9 +1,15 @@
 // import Image from "next/image";
+'use client'
 import { Button } from "./components/Button";
 import { Navprogress } from "./components/Navprogress";
 import styles from "./page.module.css";
+import { useState } from "react";
 
 export default function Home() {
+  const [ticketType, setTicketType] = useState("regular");
+
+
+
   return (
     <section className={styles.container}>
       <Navprogress />
@@ -22,21 +28,21 @@ export default function Home() {
           <section className={styles.ticketDetails}>
             <h4>Select Ticket Type:</h4>
             <div>
-              <button style={{background: '#197686'}} className={styles.ticketType}>
+              <button onClick={() => setTicketType("regular")} style={ticketType === "regular" ? {background: '#197686'} : null} className={styles.ticketType}>
                 <div>
                   <span>REGULAR ACCESS</span>
                   <span>20 left!</span>
                 </div>
                 <span className={styles.priceTag}>Free</span>
               </button>
-              <button className={styles.ticketType}>
+              <button onClick={() => setTicketType("vip")} style={ticketType === "vip" ? {background: '#197686'} : null} className={styles.ticketType}>
                 <div>
                   <span>VIP ACCESS</span>
                   <span>20 left!</span>
                 </div>
                 <span className={styles.priceTag}>$50</span>
               </button>
-              <button className={styles.ticketType}>
+              <button onClick={() => setTicketType("vvip")} style={ticketType === "vvip" ? {background: '#197686'} : null} className={styles.ticketType}>
                 <div>
                   <span>VVIP ACCESS</span>
                   <span>20 left!</span>
