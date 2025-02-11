@@ -3,6 +3,7 @@
 import { Button } from "./components/Button";
 import { Download } from "./components/Icon";
 import { Navprogress } from "./components/Navprogress";
+import Ticket from "./components/Ticket";
 import styles from "./page.module.css";
 import { useState, createContext, useContext } from "react";
 
@@ -67,6 +68,7 @@ const Ticketready = () => {
      <>
       <h1 className={styles.ticketReadyHeader}>Your Ticket is Booked</h1>
       <p className={styles.ticketReadyParagraph}>Check your email for a copy or you can download</p>
+      <Ticket />
      </>
   )
 }
@@ -147,6 +149,7 @@ export default function Home() {
               <div className={styles.buttonGroup}>
                   {
                     steps === 3 ? <Button onClick={() => {
+                      scrollTo({ top: 0, behavior: 'smooth' });
                       setSteps(1);
                       setTicketHeader("Ticket Selection");
                       setTicketQuantity(1);

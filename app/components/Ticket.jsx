@@ -2,7 +2,7 @@ import React from 'react'
 
 const Ticket = () => {
   return (
-    <div>
+    <div className='ticketContainer'>
         <div></div>
 
         <hr />
