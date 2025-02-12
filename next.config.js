@@ -1,5 +1,5 @@
 module.exports = {
     images: {
-      domains: ['ayscript.vercel.app'],
+      domains: ['ayscript.vercel.app', 'symshydwghhiootbzoka.supabase.co'],
     },
   };

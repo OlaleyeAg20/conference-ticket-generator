@@ -5,7 +5,9 @@ import { Download } from "./components/Icon";
 import { Navprogress } from "./components/Navprogress";
 import Ticket from "./components/Ticket";
 import styles from "./page.module.css";
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useRef  } from "react";
+import html2canvas from "html2canvas";
+import { supabase } from "./utils/superbaseClient";
 
 const Context = createContext();
 
@@ -63,17 +65,39 @@ const Ticketselection = ({ticketType, setTicketType, handleQuantityChange, ticke
   )
 }
 
-const Ticketready = () => {
+const Ticketready = (props) => {
+  
+
+
   return (
      <>
       <h1 className={styles.ticketReadyHeader}>Your Ticket is Booked</h1>
       <p className={styles.ticketReadyParagraph}>Check your email for a copy or you can download</p>
-      <Ticket />
+      <Ticket ref={props.ref} />
      </>
   )
 }
 
 const Attendeedetails = () => {
+
+  const {profileImgSrc, setProfileImgSrc} = useContext(Context);
+
+
+  async function uploadFile(file) {
+    const { data, error } = await supabase.storage.from('images').upload(`Images/${file.name}`, file, {
+      cacheControl: "3600",
+      upsert: false, // Prevent overwriting
+    })
+    if (error) {
+      // Handle error
+      console.log(error)
+    } else {
+      // Handle success
+      console.log(data)
+      setProfileImgSrc(`https://symshydwghhiootbzoka.supabase.co/storage/v1/object/public/${data.fullPath}`);
+    }
+  }
+
   return (
     <>
               <section className={styles.profilePhoto}>
@@ -86,12 +110,13 @@ const Attendeedetails = () => {
                       }} 
                       onDrop={(e) => {
                         e.preventDefault();
-                        const files = e.dataTransfer.files;
-                        console.log(files);
+                        const files = e.dataTransfer.files[0];
+                        uploadFile(files);
                       }}
                       onClick={() => {
                         document.getElementById('fileInput').click();
                       }}
+                      style={profileImgSrc ? {backgroundImage: `url(${profileImgSrc})`, backgroundSize: 'cover'} : null}
                     >
                       <Download />
                       Drag & Drop or Click to Upload
@@ -100,7 +125,8 @@ const Attendeedetails = () => {
                         id="fileInput" 
                         style={{ display: 'none' }} 
                         onChange={(e) => {
-                        const files = e.target.files;
+                        const files = e.target.files[0];
+                        uploadFile(files);
                         console.log(files);
                         }} 
                       />
@@ -128,6 +154,7 @@ export default function Home() {
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [ticketHeader, setTicketHeader] = useState("Ticket Selection");
   const [steps, setSteps] = useState(1);
+  const [profileImgSrc, setProfileImgSrc] = useState(null);
 
 
 
@@ -136,13 +163,30 @@ export default function Home() {
     setTicketQuantity(event.target.value);
   };
 
+
+  const captureRef = useRef(null);
+  const handleDownload = async () => {
+    if (captureRef.current) {
+      const rect = captureRef.current.getBoundingClientRect();
+      const canvas = await html2canvas(captureRef.current, {backgroundColor: '#02191d', width: rect.width, height: rect.height});
+      canvas.style.height = "auto";
+      canvas.style.background = "none";
+      const image = canvas.toDataURL("image/png");
+
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = "ticket.png";
+      link.click();
+    }
+  };
+
   return (
-    <Context.Provider value={{ ticketType, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps }}>
+    <Context.Provider value={{ ticketType, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc }}>
     <section className={styles.container}>
       <Navprogress />
       <section style={ticketHeader === "Ready" ? {border: 'none', background: 'none'} : null} className={styles.innerContainer}>
           {
-            steps === 1 ? <Ticketselection ticketType={ticketType} setTicketType={setTicketType} handleQuantityChange={handleQuantityChange} ticketQuantity={ticketQuantity} /> : steps === 2 ? <Attendeedetails /> : <Ticketready />
+            steps === 1 ? <Ticketselection ticketType={ticketType} setTicketType={setTicketType} handleQuantityChange={handleQuantityChange} ticketQuantity={ticketQuantity} /> : steps === 2 ? <Attendeedetails /> : <Ticketready ref={captureRef} />
           }
 
               {/* Buttons */}
@@ -154,6 +198,7 @@ export default function Home() {
                       setTicketHeader("Ticket Selection");
                       setTicketQuantity(1);
                       setTicketType("regular");
+                      setProfileImgSrc("")
                     }}>Book Another Ticket</Button> 
                     :
                     steps > 1 ? <Button onClick={() => {
@@ -170,7 +215,9 @@ export default function Home() {
                     setSteps(steps < 3 ? steps + 1 : 3);
                 }}>
                   Next
-                </Button> : <Button>Download Ticket</Button>
+                </Button> : <Button onClick={() => {
+                  handleDownload();
+                }}>Download Ticket</Button>
                 }
           </div>
         </section>

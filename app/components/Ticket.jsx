@@ -1,9 +1,13 @@
 import Image from 'next/image';
 import React from 'react';
+import { Context } from '../page';
 
-const Ticket = () => {
+const Ticket = ({ref}) => {
+
+  const {profileImgSrc} = React.useContext(Context);
+
   return (
-    <div className='ticketContainer'>
+    <div className='ticketContainer' ref={ref} >
         {/* <div></div>
 
         <hr />
@@ -19,7 +23,7 @@ const Ticket = () => {
               <p>📅 March 15, 2025 | 7:00 PM</p>
             </div>
 
-            <Image className='profileImg' src={'https://ayscript.vercel.app/assets/avater-N-aruFBS.png'} width={140} height={200} alt='profile image' />
+            <Image className='profileImg' src={profileImgSrc} width={140} height={200} alt='profile image' />
 
             <div className="tableContainer">
                 <table className='customTable'>
