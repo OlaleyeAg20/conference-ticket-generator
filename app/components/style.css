@@ -237,3 +237,18 @@
     background-color: white;
     margin: 0 2px;
   }
+
+  table td{
+    color: #FFF;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    width: 50%;
+  }
+
+  table td .label{
+    font-size: 10px;
+    font-weight: 400;
+    opacity: 0.33;
+  }

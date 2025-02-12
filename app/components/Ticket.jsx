@@ -4,7 +4,7 @@ import { Context } from '../page';
 
 const Ticket = ({ref}) => {
 
-  const {profileImgSrc} = React.useContext(Context);
+  const {profileImgSrc, userName, ticketType, email, ticketQuantity} = React.useContext(Context);
 
   return (
     <div className='ticketContainer' ref={ref} >
@@ -29,12 +29,12 @@ const Ticket = ({ref}) => {
                 <table className='customTable'>
                   <tbody>
                     <tr>
-                      <td>Row 1,<br /> Col 1</td>
-                      <td className='borderRow'>Row 1,<br /> Col 2</td>
+                      <td><span className="label">Name:</span><br /> {userName}</td>
+                      <td className='borderRow'><span className="label">Email:</span><br /> {email}</td>
                     </tr>
                     <tr>
-                      <td>Row 2,<br /> Col 1</td>
-                      <td className='borderRow'>Row 2,<br /> Col 2</td>
+                      <td><span className="label">Ticket Type:</span><br /> {ticketType[0].toUpperCase() + ticketType.slice(1, ticketType.length)}</td>
+                      <td className='borderRow'><span className="label">Tecket for:</span><br /> {ticketQuantity}</td>
                     </tr>
                   </tbody>
                 </table>

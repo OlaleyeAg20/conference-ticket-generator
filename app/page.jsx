@@ -1,4 +1,3 @@
-// import Image from "next/image";
 'use client'
 import { Button } from "./components/Button";
 import { Download } from "./components/Icon";
@@ -27,25 +26,25 @@ const Ticketselection = ({ticketType, setTicketType, handleQuantityChange, ticke
           <section className={styles.ticketDetails}>
             <h4>Select Ticket Type:</h4>
             <div>
-              <button onClick={() => setTicketType("regular")} style={ticketType === "regular" ? {background: '#197686'} : null} className={styles.ticketType}>
+              <button onClick={() => setTicketType("regular")} style={ticketType === "regular" ? {background: '#12464E'} : null} className={styles.ticketType}>
                 <span className={styles.priceTag}>Free</span>
                 <div>
                   <span>REGULAR ACCESS</span>
-                  <span>20 left!</span>
+                  <span>20/50</span>
                 </div>
               </button>
-              <button onClick={() => setTicketType("vip")} style={ticketType === "vip" ? {background: '#197686'} : null} className={styles.ticketType}>
+              <button onClick={() => setTicketType("vip")} style={ticketType === "vip" ? {background: '#12464E'} : null} className={styles.ticketType}>
                 <span className={styles.priceTag}>$50</span>
                 <div>
                   <span>VIP ACCESS</span>
-                  <span>20 left!</span>
+                  <span>20/50</span>
                 </div>
               </button>
-              <button onClick={() => setTicketType("vvip")} style={ticketType === "vvip" ? {background: '#197686'} : null} className={styles.ticketType}>
+              <button onClick={() => setTicketType("vvip")} style={ticketType === "vvip" ? {background: '#12464E'} : null} className={styles.ticketType}>
                 <span className={styles.priceTag}>$150</span>
                 <div>
                   <span>VVIP ACCESS</span>
-                  <span>20 left!</span>
+                  <span>20/50</span>
                 </div>
               </button>
             </div>
@@ -80,7 +79,7 @@ const Ticketready = (props) => {
 
 const Attendeedetails = () => {
 
-  const {profileImgSrc, setProfileImgSrc} = useContext(Context);
+  const {profileImgSrc, setProfileImgSrc, setUserName, userName, email, setEmail} = useContext(Context);
 
 
   async function uploadFile(file) {
@@ -135,11 +134,11 @@ const Attendeedetails = () => {
                 </section>
                 <label className={styles.inputGroup}>
                   <p>Enter your name</p>
-                  <input type="text" />
+                  <input onChange={e => {setUserName(e.target.value)}} value={userName} type="text" />
                 </label>
                 <label className={styles.inputGroup}>
                   <p>Enter your email *</p>
-                  <input type="text" placeholder={'hello@avioflagos.io'} />
+                  <input onChange={e => {setEmail(e.target.value)}} value={email} type="text" placeholder={'hello@avioflagos.io'} />
                 </label>
                 <label className={styles.inputGroup}>
                   <p>Enter your email *</p>
@@ -155,6 +154,8 @@ export default function Home() {
   const [ticketHeader, setTicketHeader] = useState("Ticket Selection");
   const [steps, setSteps] = useState(1);
   const [profileImgSrc, setProfileImgSrc] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("")
 
 
 
@@ -181,7 +182,7 @@ export default function Home() {
   };
 
   return (
-    <Context.Provider value={{ ticketType, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc }}>
+    <Context.Provider value={{ ticketType, userName, setUserName, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc, email, setEmail }}>
     <section className={styles.container}>
       <Navprogress />
       <section style={ticketHeader === "Ready" ? {border: 'none', background: 'none'} : null} className={styles.innerContainer}>
