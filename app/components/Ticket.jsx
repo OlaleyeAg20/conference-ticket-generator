@@ -4,7 +4,7 @@ import { Context } from '../page';
 
 const Ticket = ({ref}) => {
 
-  const {profileImgSrc, userName, ticketType, email, ticketQuantity} = React.useContext(Context);
+  const {profileImgSrc, userName, ticketType, email, ticketQuantity, userStory} = React.useContext(Context);
 
   return (
     <div className='ticketContainer' ref={ref} >
@@ -38,9 +38,8 @@ const Ticket = ({ref}) => {
                     </tr>
                   </tbody>
                 </table>
-                <p className='specialRequest'>Special request?</p>
                 <p className='specialRequestText'>
-                  Nil ? Or the users sad story they write in there gets this whole space, Max of three rows
+                  {userStory}
                 </p>
             </div>
           </div>

@@ -58,6 +58,11 @@ const Ticketselection = ({ticketType, setTicketType, handleQuantityChange, ticke
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
             </select>
           </section>
         </>
@@ -79,13 +84,14 @@ const Ticketready = (props) => {
 
 const Attendeedetails = () => {
 
-  const {profileImgSrc, setProfileImgSrc, setUserName, userName, email, setEmail} = useContext(Context);
+  const {profileImgSrc, setProfileImgSrc, setUserName, userName, email, setEmail, userStory, setUserStory} = useContext(Context);
 
 
   async function uploadFile(file) {
-    const { data, error } = await supabase.storage.from('images').upload(`Images/${file.name}`, file, {
+    const timeStamp = Date.now();
+    const { data, error } = await supabase.storage.from('images').upload(`Images/${timeStamp}-${file.name}`, file, {
       cacheControl: "3600",
-      upsert: false, // Prevent overwriting
+      upsert: false,
     })
     if (error) {
       // Handle error
@@ -100,7 +106,7 @@ const Attendeedetails = () => {
   return (
     <>
               <section className={styles.profilePhoto}>
-                  <p>Upload Profile Photo</p>
+                  <p>Upload Profile Photo *</p>
                   <div className={styles.uploadBox}>
                     <button 
                       className={styles.uploadBtn} 
@@ -110,21 +116,34 @@ const Attendeedetails = () => {
                       onDrop={(e) => {
                         e.preventDefault();
                         const files = e.dataTransfer.files[0];
+                        const reader = new FileReader()
+                        reader.onload = function(e){
+                          setProfileImgSrc(e.target.result)
+                        }
+                        reader.readAsDataURL(files)
                         uploadFile(files);
                       }}
                       onClick={() => {
                         document.getElementById('fileInput').click();
                       }}
-                      style={profileImgSrc ? {backgroundImage: `url(${profileImgSrc})`, backgroundSize: 'cover'} : null}
+                      // style={profileImgSrc ? {backgroundImage: `url(${profileImgSrc})`, backgroundSize: 'cover'} : null}
                     >
                       <Download />
                       Drag & Drop or Click to Upload
+                      {
+                        profileImgSrc ? <img className={styles.imgPreview} src={profileImgSrc} /> : null
+                      }
                       <input 
                         type="file" 
                         id="fileInput" 
                         style={{ display: 'none' }} 
                         onChange={(e) => {
                         const files = e.target.files[0];
+                        const reader = new FileReader()
+                        reader.onload = function(e){
+                          setProfileImgSrc(e.target.result)
+                        }
+                        reader.readAsDataURL(files)
                         uploadFile(files);
                         console.log(files);
                         }} 
@@ -133,16 +152,16 @@ const Attendeedetails = () => {
                   </div>
                 </section>
                 <label className={styles.inputGroup}>
-                  <p>Enter your name</p>
-                  <input onChange={e => {setUserName(e.target.value)}} value={userName} type="text" />
+                  <p>Enter your name *</p>
+                  <input onChange={e => {setUserName(e.target.value)}} value={userName} type="text" required/>
                 </label>
                 <label className={styles.inputGroup}>
                   <p>Enter your email *</p>
-                  <input onChange={e => {setEmail(e.target.value)}} value={email} type="text" placeholder={'hello@avioflagos.io'} />
+                  <input onChange={e => {setEmail(e.target.value)}} value={email} type="text" placeholder={'hello@avioflagos.io'} required />
                 </label>
                 <label className={styles.inputGroup}>
-                  <p>Enter your email *</p>
-                  <textarea placeholder="Textarea"></textarea>
+                  <p>Special Request?</p>
+                  <textarea placeholder="Textarea" onChange={e => {setUserStory(e.target.value)}} value={userStory} required></textarea>
                 </label>
                 </>
   )
@@ -155,7 +174,9 @@ export default function Home() {
   const [steps, setSteps] = useState(1);
   const [profileImgSrc, setProfileImgSrc] = useState(null);
   const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
+  const [userStory, setUserStory] = useState("");
+  const [firstpage, setFirstPae] = useState(true)
 
 
 
@@ -182,7 +203,7 @@ export default function Home() {
   };
 
   return (
-    <Context.Provider value={{ ticketType, userName, setUserName, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc, email, setEmail }}>
+    <Context.Provider value={{ ticketType, userName, setUserName, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc, email, setEmail, userStory, setUserStory }}>
     <section className={styles.container}>
       <Navprogress />
       <section style={ticketHeader === "Ready" ? {border: 'none', background: 'none'} : null} className={styles.innerContainer}>
@@ -200,6 +221,9 @@ export default function Home() {
                       setTicketQuantity(1);
                       setTicketType("regular");
                       setProfileImgSrc("")
+                      setEmail("")
+                      setUserName("")
+                      setFirstPae(true)
                     }}>Book Another Ticket</Button> 
                     :
                     steps > 1 ? <Button onClick={() => {
@@ -211,9 +235,14 @@ export default function Home() {
                   <Button>Cancel</Button>
                   }
                   {steps !== 3 ? <Button onClick={() => {
-                    scrollTo({ top: 0, behavior: 'smooth' });
-                    setTicketHeader(steps === 1 ? "Attendee Details" : steps === 2 ? "Ready" : "Ticket Selection");
-                    setSteps(steps < 3 ? steps + 1 : 3);
+                    if(email && userName && profileImgSrc || firstpage){
+                      scrollTo({ top: 0, behavior: 'smooth' });
+                      setTicketHeader(steps === 1 ? "Attendee Details" : steps === 2 ? "Ready" : "Ticket Selection");
+                      setSteps(steps < 3 ? steps + 1 : 3);
+                      setFirstPae(false)
+                    }else{
+                      alert('Fill in the required elements')
+                    }
                 }}>
                   Next
                 </Button> : <Button onClick={() => {
