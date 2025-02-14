@@ -84,7 +84,7 @@ const Ticketready = (props) => {
 
 const Attendeedetails = () => {
 
-  const {profileImgSrc, setProfileImgSrc, setUserName, userName, email, setEmail, userStory, setUserStory} = useContext(Context);
+  const {profileImgSrc, setProfileImgSrc, error, emailError, setUserName, userName, email, setEmail, userStory, setUserStory} = useContext(Context);
 
 
   async function uploadFile(file) {
@@ -154,10 +154,16 @@ const Attendeedetails = () => {
                 <label className={styles.inputGroup}>
                   <p>Enter your name *</p>
                   <input onChange={e => {setUserName(e.target.value)}} value={userName} type="text" required/>
+                  <div aria-live="polite" role="alert" style={{ marginTop: "10px", color: "red" }}>
+                        {error}
+                  </div>
                 </label>
                 <label className={styles.inputGroup}>
                   <p>Enter your email *</p>
                   <input onChange={e => {setEmail(e.target.value)}} value={email} type="text" placeholder={'hello@avioflagos.io'} required />
+                  <div aria-live="polite" role="alert" style={{ marginTop: "10px", color: "red" }}>
+                        {emailError}
+                  </div>
                 </label>
                 <label className={styles.inputGroup}>
                   <p>Special Request?</p>
@@ -176,7 +182,9 @@ export default function Home() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [userStory, setUserStory] = useState("");
-  const [firstpage, setFirstPae] = useState(true)
+  const [firstpage, setFirstPae] = useState(true);
+  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("")
 
 
 
@@ -197,13 +205,13 @@ export default function Home() {
 
       const link = document.createElement("a");
       link.href = image;
-      link.download = "ticket.png";
+      link.download = `${userName}'s_ticket`;
       link.click();
     }
   };
 
   return (
-    <Context.Provider value={{ ticketType, userName, setUserName, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc, email, setEmail, userStory, setUserStory }}>
+    <Context.Provider value={{ ticketType, userName, emailError, error, setUserName, setTicketType, handleQuantityChange, ticketQuantity, ticketHeader, steps, profileImgSrc, setProfileImgSrc, email, setEmail, userStory, setUserStory }}>
     <section className={styles.container}>
       <Navprogress />
       <section style={ticketHeader === "Ready" ? {border: 'none', background: 'none'} : null} className={styles.innerContainer}>
@@ -223,6 +231,7 @@ export default function Home() {
                       setProfileImgSrc("")
                       setEmail("")
                       setUserName("")
+                      setUserStory("")
                       setFirstPae(true)
                     }}>Book Another Ticket</Button> 
                     :
@@ -230,6 +239,7 @@ export default function Home() {
                       scrollTo({ top: 0, behavior: 'smooth' });
                       setSteps(steps >= 1 ? steps - 1 : 1);
                       setTicketHeader(steps === 2 ? "Ticket Selection" : steps === 3 ? "Attendee Details" : "Ready");
+                      setFirstPae(true)
                   }}>Previous</Button>
                   :
                   <Button>Cancel</Button>
@@ -240,9 +250,20 @@ export default function Home() {
                       setTicketHeader(steps === 1 ? "Attendee Details" : steps === 2 ? "Ready" : "Ticket Selection");
                       setSteps(steps < 3 ? steps + 1 : 3);
                       setFirstPae(false)
+                      // setError("Form submitted successfully!");
                     }else{
-                      alert('Fill in the required elements')
+                      // alert('Fill in the required elements')
+                      if (!userName.trim()) {
+                        setError("Name field is required.");
+                        return;
+                      }
+                  
+                      if (!email.trim()) {
+                        setEmailError("Email field is required.");
+                        return;
+                      }
                     }
+
                 }}>
                   Next
                 </Button> : <Button onClick={() => {
