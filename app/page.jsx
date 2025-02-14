@@ -160,7 +160,7 @@ const Attendeedetails = () => {
                 </label>
                 <label className={styles.inputGroup}>
                   <p>Enter your email *</p>
-                  <input onChange={e => {setEmail(e.target.value)}} value={email} type="text" placeholder={'hello@avioflagos.io'} required />
+                  <input onChange={e => {setEmail(e.target.value)}} value={email} type="email" placeholder={'hello@avioflagos.io'} required />
                   <div aria-live="polite" role="alert" style={{ marginTop: "10px", color: "red" }}>
                         {emailError}
                   </div>
@@ -245,7 +245,12 @@ export default function Home() {
                   <Button>Cancel</Button>
                   }
                   {steps !== 3 ? <Button onClick={() => {
-                    if(email && userName && profileImgSrc || firstpage){
+                    const isValidEmail = (email) => {
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                      return emailRegex.test(email);
+                    }
+
+                    if(email && userName && profileImgSrc && isValidEmail(email) || firstpage){
                       scrollTo({ top: 0, behavior: 'smooth' });
                       setTicketHeader(steps === 1 ? "Attendee Details" : steps === 2 ? "Ready" : "Ticket Selection");
                       setSteps(steps < 3 ? steps + 1 : 3);
@@ -262,6 +267,11 @@ export default function Home() {
                         setEmailError("Email field is required.");
                         return;
                       }
+                      if(isValidEmail(email) === false){
+                        setEmailError("Email is invalid enter a valid email.");
+                        return;
+                      }
+                      
                     }
 
                 }}>
